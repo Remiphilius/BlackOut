@@ -32,7 +32,6 @@ function initMap() {
         gssPos.addTo(macarte);
         if (nextElt === null) {
             var prElt = body.childNodes[0];
-            console.log(prElt);
             nextElt = document.createElement("button");
             nextElt.id = "laSuite";
             nextElt.textContent = "Ça va mieux !";
@@ -48,7 +47,14 @@ document.addEventListener("click", function () {
     if (gssBttElt === null && nextElt !== null) {
         gssBttElt = document.getElementById("laSuite");
         gssBttElt.addEventListener("click", function () {
-            console.log("Salut !")
+            var cartElt = document.getElementById("carte");
+            var panoElt = document.getElementById("pano");
+            nextElt.remove();
+            cartElt.remove();
+            panoElt.remove();
+            lat = (l1 + gssLat) / 2;
+            lon = (l2 + gssLon) / 2;
+            console.log(lat + ", " + lon);
         });
     }
 })
