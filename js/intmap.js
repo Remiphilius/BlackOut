@@ -8,6 +8,14 @@ var gssLon = null;
 var gssBttElt = null;
 var nextElt = null;
 var body = document.getElementsByTagName("body")[0];
+var greenIcon = L.icon({
+    iconUrl: 'https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
+    iconSize: [30, 49]
+});
+var redIcon = L.icon({
+    iconUrl: 'https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
+    iconSize: [30, 49]
+});
 // Fonction d'initialisation de la carte
 function initMap() {
     // Créer l'objet "macarte" et l'insèrer dans l'élément HTML qui a l'ID "map"
@@ -27,7 +35,7 @@ function initMap() {
         gssLon = e.latlng.lng.toFixed(6);
         console.log(gssLat + ", " + gssLon);
         gssPos = L.marker([gssLat, gssLon], {
-            //icon: L.BeautifyIcon.icon(options)
+            //icon: myIcon
         });
         gssPos.addTo(macarte);
         if (nextElt === null) {
@@ -52,9 +60,27 @@ document.addEventListener("click", function () {
             nextElt.remove();
             cartElt.remove();
             panoElt.remove();
-            lat = (l1 + gssLat) / 2;
-            lon = (l2 + gssLon) / 2;
-            console.log(lat + ", " + lon);
+            answerMapElt = document.createElement("div");
+            answerMapElt.id = "answerMap";
+            body.appendChild(answerMapElt);
+            var meanLat = (pos.lt + parseFloat(gssLat)) / 2;
+            var meanLon = (pos.lg + parseFloat(gssLon)) / 2;
+            console.log(meanLon);
+            macarte = L.map('answerMap').setView([meanLat, meanLon], 12);
+            L.tileLayer('https://{s}.tile.openstreetmap.fr/osmfr/{z}/{x}/{y}.png', {
+                // Il est toujours bien de laisser le lien vers la source des données
+                attribution: 'données © <a href="//osm.org/copyright">OpenStreetMap</a>/ODbL - rendu <a href="//openstreetmap.fr">OSM France</a>',
+                minZoom: 1,
+                maxZoom: 20
+            }).addTo(macarte);
+            gssPos = L.marker([gssLat, gssLon], {
+                icon: redIcon
+            });
+            gssPos.addTo(macarte);
+            var reaPos = L.marker([pos.lt, pos.lg], {
+                icon: greenIcon
+            });
+            reaPos.addTo(macarte);
         });
     }
 })
